@@ -1,0 +1,29 @@
+{
+  "name": "social-media-app-graphql",
+  "version": "1.0.0",
+  "description": "This is my attempt at making a back-end solution for a social media app",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "nodemon index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kaustuvkaran01/social-media-app-graphql.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/kaustuvkaran01/social-media-app-graphql/issues"
+  },
+  "homepage": "https://github.com/kaustuvkaran01/social-media-app-graphql#readme",
+  "dependencies": {
+    "apollo-server": "^2.19.2",
+    "bcryptjs": "^2.4.3",
+    "graphql": "^15.4.0",
+    "jsonwebtoken": "^8.5.1",
+    "mongoose": "^5.11.12",
+    "nodemon": "^2.0.7"
+  }
+}
