@@ -1,4 +1,4 @@
-const { ApolloServer } = require('apollo-server');
+const { ApolloServer,PubSub } = require('apollo-server');
 const mongoose = require('mongoose');
 
 
@@ -8,11 +8,13 @@ const Post = require('./models/Post');
 const User = require('./models/User');
 const { MONGODB } = require('./config');
 
+const pubsub = new PubSub();
+
 
 const server = new ApolloServer({
     typeDefs,
     resolvers,
-    context:({req}) => ({req})
+    context:({req}) => ({req, pubsub})
 });
 
 mongoose.connect(MONGODB,{ useNewUrlParser: true }).then(() => {
