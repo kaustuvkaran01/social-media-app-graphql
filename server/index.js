@@ -17,7 +17,7 @@ const server = new ApolloServer({
     context:({req}) => ({req, pubsub})
 });
 
-mongoose.connect(MONGODB,{ useNewUrlParser: true }).then(() => {
+mongoose.connect("mongodb+srv://kkaran3103:kkaran3103@cluster1.r8zop.mongodb.net/merng?retryWrites=true&w=majority",{ useNewUrlParser: true,useUnifiedTopology:true }).then(() => {
     return console.log('Sever connected');
 })
 
