@@ -11,4 +11,10 @@ export const useForm = (callback, initialState = {}) => {
     e.preventDefault();
     callback();
   };
+
+  return {
+    onChange,
+    onSubmit,
+    values,
+  };
 };
