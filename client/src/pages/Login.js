@@ -1,9 +1,12 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import { useForm } from "../utils/hooks";
 import { Form, Button } from "semantic-ui-react";
 import { gql, useMutation } from "@apollo/client";
 
+import { AuthContext } from "../context/auth";
+
 export default function Login(props) {
+  const context = useContext(AuthContext);
   const [errors, setErrors] = useState({});
   const { onChange, onSubmit, values } = useForm(loginUserCallback, {
     username: "",
@@ -11,8 +14,8 @@ export default function Login(props) {
   });
 
   const [loginUser, { loading }] = useMutation(LOGIN_USER, {
-    update(_, result) {
-      console.log(result);
+    update(_, { data: { login: userData } }) {
+      context.login(userData);
       props.history.push("/");
     },
     onError(err) {
@@ -40,14 +43,6 @@ export default function Login(props) {
           onChange={onChange}
           error={errors.username ? true : false}
         />
-        {/* <Form.Input
-          label="Email"
-          placeholder="Email.."
-          name="email"
-          value={values.email}
-          onChange={onChange}
-          error={errors.email ? true : false}
-        /> */}
         <Form.Input
           label="Password.."
           placeholder="Password.."
@@ -57,15 +52,6 @@ export default function Login(props) {
           onChange={onChange}
           error={errors.password ? true : false}
         />
-        {/* <Form.Input
-          label="Confirm Password.."
-          placeholder="Confirm Password.."
-          name="confirmPassword"
-          type="password"
-          value={values.confirmPassword}
-          onChange={onChange}
-          error={errors.confirmPassword ? true : false}
-        /> */}
         <Button type="submit" primary>
           Login
         </Button>
