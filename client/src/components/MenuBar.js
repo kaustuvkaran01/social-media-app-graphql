@@ -17,7 +17,7 @@ export default function MenuBar() {
       <Menu pointing secondary size="massive">
         <Menu.Item name={user.username} active as={Link} to="/" />
         <Menu.Menu position="right">
-          <Menu.Item name="logout" onClick={logout} as={Link} to="/login" />
+          <Menu.Item name="logout" onClick={logout} />
         </Menu.Menu>
       </Menu>
     </div>
