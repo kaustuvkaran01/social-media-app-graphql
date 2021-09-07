@@ -1,17 +1,18 @@
-import React from "react";
+import React, { useContext } from "react";
 import moment from "moment";
 import { Card, Image, Button, Label, Icon } from "semantic-ui-react";
 import { Link } from "react-router-dom";
+import { AuthContext } from "../context/auth";
+import LikeButton from "../components/LikeButton";
+
 export default function PostCard({
   post: { body, username, id, createdAt, likeCount, commentCount, likes },
 }) {
+  function deletePost(id) {
+    console.log(`delete post of id : ${id}`);
+  }
 
-  function likePost(){
-    console.log("Like post!!");
-  }
-  function commentOnPost(){
-    console.log("Comment on post");
-  }
+  const { user } = useContext(AuthContext);
   return (
     <Card fluid>
       <Card.Content>
@@ -27,22 +28,25 @@ export default function PostCard({
         <Card.Description>{body}</Card.Description>
       </Card.Content>
       <Card.Content extra>
-          <Button as="div" labelPosition="right" onClick={likePost}>
-            <Button basic color="teal">
-              <Icon name="heart" />
-            </Button>
-            <Label basic color="teal" pointing="left">
-              {likeCount}
-            </Label>
+        <LikeButton user={user} id={id} likes={likes} likeCount={likeCount} />
+        <Button labelPosition="right" as={Link} to={`/post/${id}`}>
+          <Button basic color="blue">
+            <Icon name="comments" />
           </Button>
-          <Button as="div" labelPosition="right" onClick={commentOnPost}>
-            <Button basic color="blue">
-              <Icon name="comments" />
-            </Button>
-            <Label basic color="blue" pointing="left">
-              {commentCount}
-            </Label>
+          <Label basic color="blue" pointing="left">
+            {commentCount}
+          </Label>
+        </Button>
+        {user && user.username === username && (
+          <Button
+            as="div"
+            color="red"
+            onClick={() => deletePost(id)}
+            floated="right"
+          >
+            <Icon name="trash" style={{ marginRight: 0 }} />
           </Button>
+        )}
       </Card.Content>
     </Card>
   );
