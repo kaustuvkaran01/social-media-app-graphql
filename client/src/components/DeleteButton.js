@@ -6,7 +6,9 @@ export default function DeleteButton({ postId }) {
   //   console.log("Post iD: ", postId);
   const DELETE_POST_MUTATION = gql`
     mutation deletePost($postId: ID!) {
-      deletePost(postId: $postId)
+      deletePost(postId: $postId) {
+        id
+      }
     }
   `;
   const [confirmOpen, setConfirmOpen] = useState(false);
@@ -16,9 +18,10 @@ export default function DeleteButton({ postId }) {
     {
       update() {
         console.log("hello dumdum", postId);
+        console.log(data);
         setConfirmOpen(false);
       },
-      variables: { postId },
+      variables: { postId: postId },
     }
   );
 
