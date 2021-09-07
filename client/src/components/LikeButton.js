@@ -27,12 +27,12 @@ export default function LikeButton({ id, likes, likeCount, user }) {
         <Icon name="heart" />
       </Button>
     ) : (
-      <Button basic color="teal">
+      <Button color="teal" basic>
         <Icon name="heart" />
       </Button>
     )
   ) : (
-    <Button as={Link} to="/login" basic color="teal">
+    <Button as={Link} to="/login" color="teal" basic>
       <Icon name="heart" />
     </Button>
   );
@@ -44,21 +44,7 @@ export default function LikeButton({ id, likes, likeCount, user }) {
         <Icon name="like" />
       </Button> */}
 
-      {user ? (
-        liked ? (
-          <Button color="teal">
-            <Icon name="heart" />
-          </Button>
-        ) : (
-          <Button color="teal" basic>
-            <Icon name="heart" />
-          </Button>
-        )
-      ) : (
-        <Button as={Link} to="/login" color="teal" basic>
-          <Icon name="heart" />
-        </Button>
-      )}
+      {likeButton}
 
       <Label basic color="teal" pointing="left">
         {likeCount}
