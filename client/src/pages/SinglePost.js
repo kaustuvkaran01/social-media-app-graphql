@@ -1,19 +1,20 @@
 import { gql, useQuery } from "@apollo/client";
 import React, { useContext } from "react";
 import { Button, Card, Grid, Image, Label, Icon } from "semantic-ui-react";
-import LikeButton from "../components/LikeButton";
 import moment from "moment";
-
 import { AuthContext } from "../context/auth";
+import LikeButton from "../components/LikeButton";
+import DeleteButton from "../components/DeleteButton";
 
 export default function SinglePost(props) {
   const { user } = useContext(AuthContext);
   const postId = props.match.params.postId;
   console.log(postId);
   const { data } = useQuery(FETCH_POST_QUERY, {
-    variables: postId,
+    variables: { postId: postId },
   });
 
+  console.log(data);
   let postMarkup;
 
   if (!data) {
@@ -29,8 +30,9 @@ export default function SinglePost(props) {
       likeCount,
       commentCount,
     } = data.getPost;
+    console.log(data);
     postMarkup = (
-      <Grid>
+      <Grid style={{ marginTop: "5px" }}>
         <Grid.Row>
           <Grid.Column width={2}>
             <Image
@@ -66,6 +68,9 @@ export default function SinglePost(props) {
                     {commentCount}
                   </Label>
                 </Button>
+                {user && user.username === username && (
+                  <DeleteButton postId={id} />
+                )}
               </Card.Content>
             </Card>
           </Grid.Column>
