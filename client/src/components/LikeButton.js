@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Button, Icon, Label } from "semantic-ui-react";
+import PopupModal from "./PopupModal";
 import { Link } from "react-router-dom";
 import { gql, useMutation } from "@apollo/client";
 export default function LikeButton({ id, likes, likeCount, user }) {
@@ -38,18 +39,23 @@ export default function LikeButton({ id, likes, likeCount, user }) {
   );
 
   return (
-    <Button as="div" labelPosition="right" onClick={likePost}>
-      {/* {likeButton} */}
-      {/* <Button color="teal">
+    <PopupModal
+      content={liked ? "Unlike post" : "Like post"}
+      children={
+        <Button as="div" labelPosition="right" onClick={likePost}>
+          {/* {likeButton} */}
+          {/* <Button color="teal">
         <Icon name="like" />
       </Button> */}
 
-      {likeButton}
+          {likeButton}
 
-      <Label basic color="teal" pointing="left">
-        {likeCount}
-      </Label>
-    </Button>
+          <Label basic color="teal" pointing="left">
+            {likeCount}
+          </Label>
+        </Button>
+      }
+    />
   );
 }
 

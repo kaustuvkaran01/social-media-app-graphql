@@ -1,18 +1,43 @@
-import { gql, useQuery } from "@apollo/client";
-import React, { useContext } from "react";
-import { Button, Card, Grid, Image, Label, Icon } from "semantic-ui-react";
+import { gql, useQuery, useMutation } from "@apollo/client";
+import React, { useContext, useState } from "react";
+import {
+  Button,
+  Card,
+  Grid,
+  Image,
+  Label,
+  Icon,
+  Form,
+} from "semantic-ui-react";
 import moment from "moment";
 import { AuthContext } from "../context/auth";
 import LikeButton from "../components/LikeButton";
 import DeleteButton from "../components/DeleteButton";
+import PopupModal from "../components/PopupModal";
 
 export default function SinglePost(props) {
   const { user } = useContext(AuthContext);
+
   const postId = props.match.params.postId;
+
   console.log(postId);
+
+  const [comment, setComment] = useState("");
+
   const { data } = useQuery(FETCH_POST_QUERY, {
     variables: { postId: postId },
   });
+
+  const [submitComment] = useMutation(SUBMIT_COMMENT_MUTATION, {
+    update() {
+      setComment("");
+    },
+    variables: { postId: postId, body: comment },
+  });
+
+  function deletePostCallback() {
+    props.history.push("/");
+  }
 
   console.log(data);
   let postMarkup;
@@ -56,23 +81,65 @@ export default function SinglePost(props) {
                   likeCount={likeCount}
                   likes={likes}
                 />
-                <Button
-                  as="div"
-                  labelPosition="right"
-                  onClick={() => console.log("Comment on post")}
-                >
-                  <Button basic color="blue">
-                    <Icon name="comments" />
+                <PopupModal content="Comment on post">
+                  <Button
+                    as="div"
+                    labelPosition="right"
+                    onClick={() => console.log("Comment on post")}
+                  >
+                    <Button basic color="blue">
+                      <Icon name="comments" />
+                    </Button>
+                    <Label basic color="blue" pointing="left">
+                      {commentCount}
+                    </Label>
                   </Button>
-                  <Label basic color="blue" pointing="left">
-                    {commentCount}
-                  </Label>
-                </Button>
+                </PopupModal>
                 {user && user.username === username && (
-                  <DeleteButton postId={id} />
+                  <DeleteButton postId={id} callback={deletePostCallback} />
                 )}
               </Card.Content>
             </Card>
+            {user && (
+              <Card fluid>
+                <Card.Content>
+                  <p>Post a comment</p>
+                  <Form>
+                    <div className="ui action input fluid">
+                      <input
+                        type="text"
+                        placeholder="Comment.."
+                        name="comment"
+                        value={comment}
+                        onChange={(event) => setComment(event.target.value)}
+                      />
+                      <button
+                        type="submit"
+                        className="ui button teal"
+                        disabled={comment.trim() === ""}
+                        onClick={submitComment}
+                      >
+                        Submit
+                      </button>
+                    </div>
+                  </Form>
+                </Card.Content>
+              </Card>
+            )}
+            {comments.map((comment) => {
+              return (
+                <Card fluid key={comment.id}>
+                  <Card.Content>
+                    {user && user.username === comment.username && (
+                      <DeleteButton postId={id} commentId={comment.id} />
+                    )}
+                    <Card.Header>{comment.username}</Card.Header>
+                    <Card.Meta>{moment(comment.createdAt).fromNow()}</Card.Meta>
+                    <Card.Description>{comment.body}</Card.Description>
+                  </Card.Content>
+                </Card>
+              );
+            })}
           </Grid.Column>
         </Grid.Row>
       </Grid>
@@ -81,6 +148,21 @@ export default function SinglePost(props) {
 
   return <div>{postMarkup}</div>;
 }
+
+const SUBMIT_COMMENT_MUTATION = gql`
+  mutation ($postId: String!, $body: String!) {
+    createComment(postId: $postId, body: $body) {
+      id
+      comments {
+        id
+        body
+        createdAt
+        username
+      }
+      commentCount
+    }
+  }
+`;
 
 const FETCH_POST_QUERY = gql`
   query ($postId: ID!) {
